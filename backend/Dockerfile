@@ -15,4 +15,4 @@ RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","target/service-marketplace-backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh","-c","java -jar target/*.jar"]
