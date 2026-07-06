@@ -1,0 +1,4 @@
+.app-main {
+  min-height: calc(100vh - var(--header-height) - var(--subheader-height) - 260px);
+  display: block;
+}

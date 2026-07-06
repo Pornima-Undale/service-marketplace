@@ -1,0 +1,75 @@
+@if (!loading() && !hasProfile()) {
+  <section class="page-section">
+    <div class="container">
+      <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7v6c0 4 4 7 9 8 5-1 9-4 9-8V7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>Set up your business profile before you can add services.</p>
+        <a routerLink="/provider/profile" class="btn btn-primary mt-16">Set Up Business Profile</a>
+      </div>
+    </div>
+  </section>
+} @else {
+  <section class="page-section">
+    <div class="container">
+      <div class="section-header flex-between">
+        <div>
+          <span class="eyebrow">Provider Dashboard</span>
+          <h1>My Services</h1>
+        </div>
+        <a routerLink="/provider/services/new" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Add Service
+        </a>
+      </div>
+
+      <div class="stat-cards">
+        <div class="card stat-card">
+          <span class="text-muted">Total Services</span>
+          <strong>{{ services().length }}</strong>
+        </div>
+        <div class="card stat-card">
+          <span class="text-muted">Average Price</span>
+          <strong>₹{{ avgPrice() | number:'1.0-0' }}</strong>
+        </div>
+        <div class="card stat-card">
+          <a routerLink="/provider/bookings" class="stat-link">
+            <span class="text-muted">Booking Requests</span>
+            <strong>View All →</strong>
+          </a>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton" style="height:80px;border-radius:12px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:80px;border-radius:12px;margin-bottom:12px"></div>
+      } @else if (services().length === 0) {
+        <div class="empty-state">
+          <p>You haven't listed any services yet.</p>
+          <a routerLink="/provider/services/new" class="btn btn-primary mt-16">List Your First Service</a>
+        </div>
+      } @else {
+        <div class="service-manage-list">
+          @for (svc of services(); track svc.id) {
+            <div class="card manage-row">
+              <div class="manage-info">
+                <h3>{{ svc.title }}</h3>
+                <p class="text-muted">{{ svc.description }}</p>
+                <div class="manage-meta">
+                  <span class="badge badge-role">{{ svc.categoryName || 'General' }}</span>
+                  <span class="manage-price">₹{{ svc.price | number:'1.0-0' }}</span>
+                </div>
+              </div>
+              <div class="manage-actions">
+                <a [routerLink]="['/services', svc.id]" class="btn btn-ghost btn-sm">View</a>
+                <a [routerLink]="['/provider/services', svc.id, 'edit']" class="btn btn-outline btn-sm">Edit</a>
+                <button class="btn btn-danger btn-sm" [disabled]="deletingId() === svc.id" (click)="deleteService(svc.id)">
+                  @if (deletingId() === svc.id) { <span class="spinner"></span> } @else { Delete }
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+}

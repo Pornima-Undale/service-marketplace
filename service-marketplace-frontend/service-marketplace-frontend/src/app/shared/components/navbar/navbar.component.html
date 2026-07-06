@@ -1,0 +1,98 @@
+<header class="site-header">
+  <!-- Top utility bar -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <span class="topbar-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="2"/></svg>
+          support&#64;localpro.in
+        </span>
+        <span class="topbar-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1118 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>
+          Pune, Maharashtra
+        </span>
+      </div>
+      <div class="topbar-right">
+        @if (!auth.isLoggedIn()) {
+          <a routerLink="/provider/dashboard" class="topbar-link">Become a Provider</a>
+        }
+        <span class="topbar-item">Trusted by 12,000+ customers</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main bar -->
+  <div class="mainbar">
+    <div class="container mainbar-inner">
+      <a routerLink="/" class="brand" (click)="closeMenus()">
+        <span class="brand-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9a1 1 0 001 1h12a1 1 0 001-1v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-text">Local<span class="brand-accent">Pro</span></span>
+      </a>
+
+      <nav class="main-nav" [class.open]="mobileMenuOpen()">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="closeMenus()">Home</a>
+        <a routerLink="/services" routerLinkActive="active" (click)="closeMenus()">Browse Services</a>
+
+        @if (auth.isLoggedIn() && auth.role() === 'CUSTOMER') {
+          <a routerLink="/my-bookings" routerLinkActive="active" (click)="closeMenus()">My Bookings</a>
+        }
+
+        @if (auth.isLoggedIn() && auth.role() === 'PROVIDER') {
+          <a routerLink="/provider/dashboard" routerLinkActive="active" (click)="closeMenus()">Dashboard</a>
+          <a routerLink="/provider/bookings" routerLinkActive="active" (click)="closeMenus()">Booking Requests</a>
+        }
+
+        @if (auth.isLoggedIn() && auth.role() === 'ADMIN') {
+          <a routerLink="/admin/users" routerLinkActive="active" (click)="closeMenus()">Users</a>
+          <a routerLink="/admin/categories" routerLinkActive="active" (click)="closeMenus()">Categories</a>
+        }
+
+        <!-- Mobile-only auth actions -->
+        <div class="mobile-auth">
+          @if (!auth.isLoggedIn()) {
+            <a routerLink="/auth/login" class="btn btn-outline btn-sm btn-block" (click)="closeMenus()">Log In</a>
+            <a routerLink="/auth/register" class="btn btn-primary btn-sm btn-block" (click)="closeMenus()">Sign Up</a>
+          } @else {
+            <button class="btn btn-outline btn-sm btn-block" (click)="logout()">Log Out</button>
+          }
+        </div>
+      </nav>
+
+      <div class="header-actions">
+        @if (!auth.isLoggedIn()) {
+          <a routerLink="/auth/login" class="btn btn-outline btn-sm">Log In</a>
+          <a routerLink="/auth/register" class="btn btn-primary btn-sm">Sign Up</a>
+        } @else {
+          <div class="user-menu">
+            <button class="user-chip" (click)="toggleUserMenu()">
+              <span class="avatar">{{ initials(auth.currentUser()?.email) }}</span>
+              <span class="user-info">
+                <span class="user-email">{{ auth.currentUser()?.email }}</span>
+                <span class="user-role badge badge-role">{{ auth.role() }}</span>
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="chevron"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            @if (userMenuOpen()) {
+              <div class="dropdown" (click)="closeMenus()">
+                @if (auth.role() === 'CUSTOMER') {
+                  <a routerLink="/my-bookings">My Bookings</a>
+                }
+                @if (auth.role() === 'PROVIDER') {
+                  <a routerLink="/provider/profile">Business Profile</a>
+                  <a routerLink="/provider/dashboard">My Services</a>
+                }
+                <button class="logout-btn" (click)="logout()">Log Out</button>
+              </div>
+            }
+          </div>
+        }
+
+        <button class="hamburger" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,128 @@
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="hero-badge">🇮🇳 Now live across Pune</span>
+      <h1>Trusted local help,<br>booked in minutes.</h1>
+      <p class="hero-sub">From plumbers to tutors, LocalPro connects you with verified professionals in your neighborhood — transparent pricing, real reviews, zero guesswork.</p>
+
+      <form class="hero-search" (ngSubmit)="onSearch()">
+        <div class="input-group search-input">
+          <span class="input-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <input class="input" type="text" placeholder="Try &quot;home cleaning&quot; or &quot;electrician&quot;" [(ngModel)]="searchTerm" name="search">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Find Services</button>
+      </form>
+
+      <div class="hero-stats">
+        <div><strong>500+</strong><span>Verified Providers</span></div>
+        <div><strong>12,000+</strong><span>Jobs Completed</span></div>
+        <div><strong>4.8/5</strong><span>Average Rating</span></div>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <div class="art-card art-card-main">
+        <div class="art-avatar">SK</div>
+        <div>
+          <strong>Sanjay K.</strong>
+          <div class="art-stars">★★★★★</div>
+          <p>"Fixed my kitchen sink in 30 minutes. Super professional!"</p>
+        </div>
+      </div>
+      <div class="art-card art-card-float">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Booking confirmed
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page-section categories-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="eyebrow">Popular Categories</span>
+      <h2>What are you looking for today?</h2>
+    </div>
+    <div class="category-grid">
+      @for (cat of categories; track cat.name) {
+        <button class="category-card" (click)="browseCategory(cat.name)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path [attr.d]="cat.icon" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>{{ cat.name }}</span>
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="page-section featured-section">
+  <div class="container">
+    <div class="section-header flex-between">
+      <div>
+        <span class="eyebrow">Handpicked For You</span>
+        <h2>Featured Services</h2>
+      </div>
+      <a routerLink="/services" class="btn btn-outline">View All Services</a>
+    </div>
+
+    @if (loading()) {
+      <div class="service-grid">
+        @for (i of [1,2,3]; track i) {
+          <div class="card skeleton-card"><div class="skeleton" style="height:140px;border-radius:16px 16px 0 0"></div><div style="padding:18px"><div class="skeleton" style="height:16px;width:70%;margin-bottom:10px"></div><div class="skeleton" style="height:12px;width:50%"></div></div></div>
+        }
+      </div>
+    } @else if (featured().length === 0) {
+      <div class="empty-state">
+        <p>No services available yet. Check back soon, or be the first provider to list one!</p>
+        <a routerLink="/auth/register" class="btn btn-primary mt-16">Become a Provider</a>
+      </div>
+    } @else {
+      <div class="service-grid">
+        @for (svc of featured(); track svc.id) {
+          <a class="service-card card" [routerLink]="['/services', svc.id]">
+            <div class="service-card-banner">
+              <span class="service-category-tag">{{ svc.categoryName || 'General' }}</span>
+            </div>
+            <div class="service-card-body">
+              <h3>{{ svc.title }}</h3>
+              <p class="text-muted service-desc">{{ svc.description }}</p>
+              <div class="flex-between mt-16">
+                <span class="service-price">₹{{ svc.price | number:'1.0-0' }}</span>
+                <span class="text-muted service-provider">{{ svc.providerName || 'Provider' }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<section class="page-section how-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="eyebrow">Simple Process</span>
+      <h2>How LocalPro Works</h2>
+    </div>
+    <div class="steps-grid">
+      @for (step of steps; track step.title; let i = $index) {
+        <div class="step-card">
+          <span class="step-number">{{ i + 1 }}</span>
+          <h3>{{ step.title }}</h3>
+          <p class="text-muted">{{ step.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container cta-inner">
+    <div>
+      <h2>Are you a skilled professional?</h2>
+      <p>Join LocalPro as a provider and start getting booked by customers in your area — no listing fees, ever.</p>
+    </div>
+    <a routerLink="/auth/register" class="btn btn-accent btn-lg">Register as Provider</a>
+  </div>
+</section>

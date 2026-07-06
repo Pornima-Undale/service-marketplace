@@ -1,0 +1,47 @@
+<section class="page-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="eyebrow">Bookings</span>
+      <h1>My Bookings</h1>
+      <p class="text-muted">Track the status of your service requests below.</p>
+    </div>
+
+    <div class="info-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-5M12 8h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      This list currently reflects all bookings recorded in the system, since the API does not yet filter by logged-in customer.
+    </div>
+
+    <div class="status-tabs">
+      @for (tab of statusTabs; track tab) {
+        <button class="tab" [class.active]="filterStatus() === tab" (click)="filterStatus.set(tab)">{{ tab }}</button>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="skeleton" style="height:90px;border-radius:12px;margin-bottom:12px"></div>
+      <div class="skeleton" style="height:90px;border-radius:12px;margin-bottom:12px"></div>
+    } @else if (errorMsg()) {
+      <div class="empty-state"><p>{{ errorMsg() }}</p></div>
+    } @else if (filtered().length === 0) {
+      <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <p>No bookings found{{ filterStatus() !== 'ALL' ? ' with status ' + filterStatus() : '' }}.</p>
+        <a routerLink="/services" class="btn btn-primary mt-16">Browse Services</a>
+      </div>
+    } @else {
+      <div class="booking-list">
+        @for (b of filtered(); track b.id) {
+          <div class="booking-row card">
+            <div class="booking-main">
+              <h3>{{ b.serviceTitle || 'Service #' + b.id }}</h3>
+              <p class="text-muted">
+                Requested by {{ b.customerName || 'a customer' }} · {{ b.bookingDate }}
+              </p>
+            </div>
+            <span class="badge" [class]="badgeClass(b.status)">{{ b.status }}</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

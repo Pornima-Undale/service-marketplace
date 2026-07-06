@@ -1,0 +1,76 @@
+<section class="page-section">
+  <div class="container narrow">
+    <div class="section-header">
+      <span class="eyebrow">Provider Setup</span>
+      <h1>Business Profile</h1>
+      <p class="text-muted">Set up your business profile so customers can find and book your services.</p>
+    </div>
+
+    @if (existingProfile()) {
+      <div class="card profile-summary">
+        <div class="summary-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2>{{ existingProfile()!.businessName }}</h2>
+        <p class="text-muted">{{ existingProfile()!.description }}</p>
+        <div class="summary-actions">
+          <a routerLink="/provider/services/new" class="btn btn-primary">Add a Service</a>
+          <a routerLink="/provider/dashboard" class="btn btn-outline">Go to Dashboard</a>
+        </div>
+        <button class="btn btn-ghost btn-sm mt-16" (click)="startOver()">Set up a different profile</button>
+      </div>
+    } @else {
+      <div class="card form-card">
+        <div class="info-banner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-5M12 8h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          The API links this profile to a User ID rather than your login session. Ask an admin for your User ID from the Manage Users page, or check the ID you received on the platform.
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div class="field">
+            <label for="userId">Your User ID</label>
+            <input id="userId" class="input" type="text" formControlName="userId" placeholder="e.g. 4"
+              [class.invalid]="userId.invalid && userId.touched">
+            @if (userId.invalid && userId.touched) {
+              <div class="error-text">Enter a valid numeric user ID.</div>
+            }
+          </div>
+
+          <div class="field">
+            <label for="businessName">Business Name</label>
+            <input id="businessName" class="input" type="text" formControlName="businessName" placeholder="e.g. Sharma Home Services"
+              [class.invalid]="businessName.invalid && businessName.touched">
+            @if (businessName.invalid && businessName.touched) {
+              <div class="error-text">Business name is required.</div>
+            }
+          </div>
+
+          <div class="field">
+            <label for="description">Business Description</label>
+            <textarea id="description" class="input" formControlName="description" rows="4"
+              placeholder="Tell customers what you offer and what makes your service stand out..."
+              [class.invalid]="description.invalid && description.touched"></textarea>
+            @if (description.invalid && description.touched) {
+              <div class="error-text">Please provide a short description (min 10 characters).</div>
+            }
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="latitude">Latitude <span class="text-muted">(optional)</span></label>
+              <input id="latitude" class="input" type="text" formControlName="latitude" placeholder="18.5204">
+            </div>
+            <div class="field">
+              <label for="longitude">Longitude <span class="text-muted">(optional)</span></label>
+              <input id="longitude" class="input" type="text" formControlName="longitude" placeholder="73.8567">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" [disabled]="loading()">
+            @if (loading()) { <span class="spinner"></span> } @else { Create Business Profile }
+          </button>
+        </form>
+      </div>
+    }
+  </div>
+</section>

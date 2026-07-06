@@ -1,0 +1,34 @@
+<section class="page-section">
+  <div class="container narrow">
+    <div class="section-header">
+      <span class="eyebrow">Admin Panel</span>
+      <h1>Manage Categories</h1>
+      <p class="text-muted">Create categories that providers can assign to their services.</p>
+    </div>
+
+    <div class="info-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-5M12 8h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      The API only supports creating categories, not listing every category ever created. The list below shows categories added during this browser session.
+    </div>
+
+    <div class="card form-card">
+      <div class="add-row">
+        <input class="input" type="text" placeholder="e.g. Home Cleaning" [(ngModel)]="newCategoryName" (keyup.enter)="submit()">
+        <button class="btn btn-primary" (click)="submit()" [disabled]="loading()">
+          @if (loading()) { <span class="spinner"></span> } @else { Add Category }
+        </button>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16">Categories Added This Session</h3>
+    @if (categories().length === 0) {
+      <div class="empty-state"><p>No categories added yet.</p></div>
+    } @else {
+      <div class="chip-list">
+        @for (cat of categories(); track cat.id) {
+          <span class="chip">{{ cat.name }} <small>#{{ cat.id }}</small></span>
+        }
+      </div>
+    }
+  </div>
+</section>

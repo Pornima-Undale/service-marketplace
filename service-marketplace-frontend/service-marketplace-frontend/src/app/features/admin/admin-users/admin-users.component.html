@@ -1,0 +1,40 @@
+<section class="page-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="eyebrow">Admin Panel</span>
+      <h1>Manage Users</h1>
+      <p class="text-muted">View and manage all registered accounts on LocalPro.</p>
+    </div>
+
+    @if (loading()) {
+      <div class="skeleton" style="height:280px;border-radius:16px"></div>
+    } @else if (errorMsg()) {
+      <div class="empty-state"><p>{{ errorMsg() }}</p></div>
+    } @else if (users().length === 0) {
+      <div class="empty-state"><p>No users found.</p></div>
+    } @else {
+      <div class="card table-card">
+        <table class="user-table">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (u of users(); track u.id) {
+              <tr>
+                <td>#{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+                <td><span class="badge" [class]="roleBadgeClass(u.role)">{{ u.role }}</span></td>
+                <td class="text-right">
+                  <button class="btn btn-danger btn-sm" [disabled]="deletingId() === u.id" (click)="deleteUser(u)">
+                    @if (deletingId() === u.id) { <span class="spinner"></span> } @else { Delete }
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,12 @@
+:host { display: block; }
+.narrow { max-width: 620px; }
+.form-card { padding: 32px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.link-btn {
+  background: none; border: none; color: var(--color-primary); font-weight: 600;
+  font-size: 13.5px; cursor: pointer; padding: 0 0 20px; text-align: left;
+}
+.add-category-row { display: flex; gap: 8px; margin-bottom: 20px; }
+.add-category-row .input { flex: 1; }
+.form-actions { display: flex; gap: 12px; align-items: center; margin-top: 8px; }
+@media (max-width: 500px) { .field-row { grid-template-columns: 1fr; } }
